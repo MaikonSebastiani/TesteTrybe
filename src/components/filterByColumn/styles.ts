@@ -1,10 +1,20 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { shade } from 'polished';
 
-export const Container = styled.div`
+interface ContainerProps {
+    disabled: boolean
+}
+interface OptionsProps {
+    hidden?: boolean
+}
+export const Container = styled.div<ContainerProps>`
     display: flex;
     align-items: flex-start;
     justify-content: center;
+    ${(props) => props.disabled && props.disabled === true && css`
+        pointer-events: none; 
+        opacity: 0.5;
+    `}
 `;
 export const Button = styled.button`
     padding: 10px;
@@ -38,4 +48,10 @@ export const Close = styled.div`
         font-weight: 600;
         cursor: pointer;
     }
+`;
+
+export const Option = styled.option<OptionsProps>`
+    ${(props) => props.hidden && props.hidden === true && css`
+        visibility: hidden;
+    `}
 `;

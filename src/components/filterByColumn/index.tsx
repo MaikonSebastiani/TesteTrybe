@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
@@ -20,10 +20,17 @@ interface FilterFormData {
 
 const FilterByColumn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const [blockFilter, setblockFilter] = useState(false);
 
   const { data } = UsePlanets();
 
   const { filterPlanetColum } = UseFilterPlanet();
+
+  const { filterColumItensResult } = UseFilterPlanet();
+  const { filterColumUsedResult } = UseFilterPlanet();
+
+  const { removeColumItens } = UseFilterPlanet();
+  const { addForm } = UseFilterPlanet();
 
   const handleSubmite = useCallback(async (formData: FilterFormData) => {
     try {
@@ -50,24 +57,36 @@ const FilterByColumn: React.FC = () => {
           dataPlanets: data,
         },
       );
+
+      await addForm({
+        mumberForm: formData.colum,
+      });
+
+      setblockFilter(true);
+      removeColumItens(formData.colum);
     } catch (err: any) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
       }
     }
-  }, [filterPlanetColum, data]);
+  }, [filterPlanetColum, data, addForm, removeColumItens]);
 
   return (
     <Form ref={formRef} onSubmit={handleSubmite}>
-      <Container>
+      <Container disabled={blockFilter}>
         <Select name="colum" startValue="">
           <option value="" disabled>Selecione</option>
-          <option value="population">População</option>
-          <option value="orbital_period">Periodo orbital</option>
-          <option value="diameter">Diametro</option>
-          <option value="rotation_period">Periodo de rotação</option>
-          <option value="surface_water">Superfice da água</option>
+          {filterColumItensResult && Object.keys(filterColumItensResult).map((propKey: any) => (
+            <option
+              key={propKey}
+              value={filterColumItensResult[propKey].columnValue}
+              hidden={filterColumUsedResult.includes(filterColumItensResult[propKey].columnValue)}
+            >
+              {filterColumItensResult[propKey].columnName}
+
+            </option>
+          ))}
         </Select>
 
         <Select name="comparison" startValue="">

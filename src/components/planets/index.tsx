@@ -3,7 +3,6 @@ import { Component } from './styles';
 
 import { UsePlanets } from '../../context/planets';
 import { UseFilterPlanet } from '../../context/filterPlanets';
-import { UseFilterColum } from '../../context/filterColum';
 
 const Planets: React.FC = () => {
   const { getPlanets } = UsePlanets();
@@ -11,8 +10,6 @@ const Planets: React.FC = () => {
 
   const { filterPlanetName } = UseFilterPlanet();
   const { filterResult } = UseFilterPlanet();
-
-  const { filterColumResult } = UseFilterColum();
 
   useEffect(() => {
     async function fetchData() {
