@@ -9,7 +9,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     name: string;
   }
 
-const Input: React.FC<InputProps> = ({ name, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, type, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -27,10 +27,9 @@ const Input: React.FC<InputProps> = ({ name, ...rest }) => {
   return (
     <Container>
       <input
-        type="number"
+        type={type}
         ref={inputRef}
         defaultValue={defaultValue}
-        placeholder="Digite uma quantidade"
         {...rest}
       />
       {error

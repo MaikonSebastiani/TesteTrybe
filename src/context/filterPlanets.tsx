@@ -16,10 +16,11 @@ interface FilterContextData {
     numberOfFormResult: object;
     filterPlanetName(text: string, data: object): void;
     filterPlanetColum(credentials: filterColumItensProps): void;
-    addColumItens(arrayColumn: any[]): void
-    removeColumItens(item: string): void
-    addForm(arrayForm: object): void
-    removeForm(arrayForm: object): void
+    addColumItens(arrayColumn: any[]): void;
+    removeColumItens(item: string): void;
+    addForm(arrayForm: object): void;
+    removeForm(arrayForm: object): void;
+    removeSearchInput(text: string | any): void;
 }
 
 const FilterNameContext = createContext<FilterContextData>({} as FilterContextData);
@@ -31,9 +32,20 @@ const FilterNameProvider: React.FC = ({ children }) => {
   const [nameOfForms, setnameOfForms] = useState<any>();
 
   const filterPlanetName = useCallback((text, data) => {
-    const filtered = data.results.filter((elm: any) => elm.name.toLowerCase().indexOf(text.toLowerCase()) > -1);
-    setFilterText(filtered);
-  }, []);
+    if (filterText) {
+      const filtered = filterText.filter((elm: any) => elm.name.toLowerCase().indexOf(text.toLowerCase()) > -1);
+      setFilterText(filtered);
+
+      const dataLocal = filterText.filter((x: any) => !filtered.includes(x));
+      localStorage.setItem(text, JSON.stringify(dataLocal));
+    } else {
+      const filtered = data.results.filter((elm: any) => elm.name.toLowerCase().indexOf(text.toLowerCase()) > -1);
+      setFilterText(filtered);
+
+      const dataLocal = data.results.filter((x: any) => !filtered.includes(x));
+      localStorage.setItem(text, JSON.stringify(dataLocal));
+    }
+  }, [filterText]);
 
   const filterPlanetColum = useCallback(async ({
     colum,
@@ -117,6 +129,16 @@ const FilterNameProvider: React.FC = ({ children }) => {
     }
   }, [nameOfForms, filterColumUsed, filterText]);
 
+  const removeSearchInput = useCallback((text) => {
+    const getDataLocal = localStorage.getItem(text.planetName);
+
+    if (getDataLocal) {
+      const data = filterText;
+      setFilterText(data.concat(JSON.parse(getDataLocal)));
+      localStorage.removeItem(text.planetName);
+    }
+  }, [filterText]);
+
   return (
     <FilterNameContext.Provider value={{
       filterResult: filterText,
@@ -129,6 +151,7 @@ const FilterNameProvider: React.FC = ({ children }) => {
       removeColumItens,
       addForm,
       removeForm,
+      removeSearchInput,
     }}
     >
       {children}

@@ -106,7 +106,7 @@ const FilterByColumn: React.FC = () => {
           <option value="equalto">Igual a</option>
         </Select>
 
-        <Input name="quantity" />
+        <Input type="number" placeholder="digite uma quantidade" name="quantity" />
 
         <Button type="submit" className="sendForm">Filtrar</Button>
         <Button type="button" className="removeForm" onClick={handleRemoveForm}>Remover</Button>
