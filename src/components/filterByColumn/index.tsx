@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useRef } from 'react';
 
-import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 

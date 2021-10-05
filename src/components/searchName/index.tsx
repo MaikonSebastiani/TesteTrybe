@@ -28,10 +28,6 @@ const SearchName: React.FC = () => {
     try {
       formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('campo obrigatório'),
-      });
-
       filterPlanetName(formData.planetName, data);
     } catch (err: any) {
       if (err instanceof Yup.ValidationError) {

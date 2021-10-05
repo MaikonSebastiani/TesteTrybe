@@ -8,7 +8,6 @@ const Planets: React.FC = () => {
   const { getPlanets } = UsePlanets();
   const { data } = UsePlanets();
 
-  const { filterPlanetName } = UseFilterPlanet();
   const { filterResult } = UseFilterPlanet();
 
   useEffect(() => {
