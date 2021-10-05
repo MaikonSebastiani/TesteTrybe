@@ -11,6 +11,7 @@ import { UseFilterPlanet } from '../context/filterPlanets';
 const Table:React.FC = () => {
   const { numberOfFormResult } = UseFilterPlanet();
   const { addColumItens } = UseFilterPlanet();
+  const { filterColumItensResult } = UseFilterPlanet();
 
   useEffect(() => {
     addColumItens([
@@ -43,8 +44,7 @@ const Table:React.FC = () => {
       <SearchName />
 
       <p>Filtrar por coluna</p>
-
-      {numberOfFormResult && Object.keys(numberOfFormResult).map((propKey: any) => (
+      {filterColumItensResult && Object.keys(filterColumItensResult).map((propKey: any) => (
         <FilterByColumn key={propKey} />
       ))}
 

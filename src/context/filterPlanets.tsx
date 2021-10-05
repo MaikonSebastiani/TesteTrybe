@@ -19,6 +19,7 @@ interface FilterContextData {
     addColumItens(arrayColumn: any[]): void
     removeColumItens(item: string): void
     addForm(arrayForm: object): void
+    removeForm(arrayForm: object): void
 }
 
 const FilterNameContext = createContext<FilterContextData>({} as FilterContextData);
@@ -27,11 +28,7 @@ const FilterNameProvider: React.FC = ({ children }) => {
   const [filterText, setFilterText] = useState<any>();
   const [filterColumItens, setfilterColumItens] = useState<any>();
   const [filterColumUsed, setFilterColumUsed] = useState<any>([]);
-  const [numberOfForms, setnumberOfForms] = useState<any>([
-    {
-      mumberForm: 'initial',
-    },
-  ]);
+  const [nameOfForms, setnameOfForms] = useState<any>();
 
   const filterPlanetName = useCallback((text, data) => {
     const filtered = data.results.filter((elm: any) => elm.name.toLowerCase().indexOf(text.toLowerCase()) > -1);
@@ -61,6 +58,8 @@ const FilterNameProvider: React.FC = ({ children }) => {
 
         return evaluate(parseInt(elm[colum], 10), parseInt(quantity, 10)) && elm[colum] !== 'unknown';
       });
+      const dataLocal = filterText.filter((x: any) => !filtered.includes(x));
+      localStorage.setItem(colum, JSON.stringify(dataLocal));
       setFilterText(filtered);
     } else {
       const filtered = dataPlanets.results.filter((elm: any) => {
@@ -79,6 +78,9 @@ const FilterNameProvider: React.FC = ({ children }) => {
 
         return evaluate(parseInt(elm[colum], 10), parseInt(quantity, 10)) && elm[colum] !== 'unknown';
       });
+
+      const dataLocal = dataPlanets.results.filter((x: any) => !filtered.includes(x));
+      localStorage.setItem(colum, JSON.stringify(dataLocal));
       setFilterText(filtered);
     }
   }, [filterText]);
@@ -92,22 +94,41 @@ const FilterNameProvider: React.FC = ({ children }) => {
   }, []);
 
   const addForm = useCallback((arrayForm) => {
-    if (numberOfForms.length <= 4) {
-      setnumberOfForms((state: any) => [...state, arrayForm]);
+    if (!nameOfForms) {
+      setnameOfForms([arrayForm]);
+    } else {
+      setnameOfForms((state: any) => [...state, arrayForm]);
     }
-  }, [numberOfForms]);
+  }, [nameOfForms]);
+
+  const removeForm = useCallback((items : Omit<filterColumItensProps, 'dataPlanets'>) => {
+    const dataForm = nameOfForms.filter((e: any) => e.nameForm.indexOf(items.colum) > -1);
+    setnameOfForms(dataForm);
+
+    const backOption = filterColumUsed.filter((e: any) => e.indexOf(items.colum));
+
+    setFilterColumUsed(backOption);
+
+    const getDataLocal = localStorage.getItem(items.colum);
+    if (getDataLocal) {
+      const data = filterText;
+      setFilterText(data.concat(JSON.parse(getDataLocal)));
+      localStorage.removeItem(items.colum);
+    }
+  }, [nameOfForms, filterColumUsed, filterText]);
 
   return (
     <FilterNameContext.Provider value={{
       filterResult: filterText,
       filterColumItensResult: filterColumItens,
       filterColumUsedResult: filterColumUsed,
-      numberOfFormResult: numberOfForms,
+      numberOfFormResult: nameOfForms,
       filterPlanetName,
       filterPlanetColum,
       addColumItens,
       removeColumItens,
       addForm,
+      removeForm,
     }}
     >
       {children}

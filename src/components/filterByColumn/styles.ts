@@ -12,8 +12,10 @@ export const Container = styled.div<ContainerProps>`
     align-items: flex-start;
     justify-content: center;
     ${(props) => props.disabled && props.disabled === true && css`
-        pointer-events: none; 
-        opacity: 0.5;
+        select, input, .sendForm {
+            pointer-events: none; 
+            opacity: 0.5;
+        }
     `}
 `;
 export const Button = styled.button`
@@ -51,7 +53,7 @@ export const Close = styled.div`
 `;
 
 export const Option = styled.option<OptionsProps>`
-    ${(props) => props.hidden && props.hidden === true && css`
-        visibility: hidden;
-    `}
+    /* ${(props) => props.hidden && props.hidden === true && css`
+        visibility: block;
+    `} */
 `;

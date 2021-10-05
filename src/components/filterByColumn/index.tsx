@@ -31,6 +31,7 @@ const FilterByColumn: React.FC = () => {
 
   const { removeColumItens } = UseFilterPlanet();
   const { addForm } = UseFilterPlanet();
+  const { removeForm } = UseFilterPlanet();
 
   const handleSubmite = useCallback(async (formData: FilterFormData) => {
     try {
@@ -59,7 +60,7 @@ const FilterByColumn: React.FC = () => {
       );
 
       await addForm({
-        mumberForm: formData.colum,
+        nameForm: formData.colum,
       });
 
       setblockFilter(true);
@@ -71,6 +72,15 @@ const FilterByColumn: React.FC = () => {
       }
     }
   }, [filterPlanetColum, data, addForm, removeColumItens]);
+
+  const handleRemoveForm = useCallback(() => {
+    const dataFrom = formRef.current?.getData();
+    if (dataFrom) {
+      removeForm(dataFrom);
+      setblockFilter(false);
+    }
+    formRef.current?.reset();
+  }, [removeForm]);
 
   return (
     <Form ref={formRef} onSubmit={handleSubmite}>
@@ -98,7 +108,8 @@ const FilterByColumn: React.FC = () => {
 
         <Input name="quantity" />
 
-        <Button type="submit">Filtrar</Button>
+        <Button type="submit" className="sendForm">Filtrar</Button>
+        <Button type="button" className="removeForm" onClick={handleRemoveForm}>Remover</Button>
       </Container>
     </Form>
   );
