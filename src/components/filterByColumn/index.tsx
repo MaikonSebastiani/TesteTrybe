@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 
 import Select from '../select';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { Container, Button } from './styles';
+import { Container, Button, Forme } from './styles';
 
 import { UsePlanets } from '../../context/planets';
 import { UseFilterPlanet } from '../../context/filterPlanets';
@@ -21,6 +21,7 @@ interface FilterFormData {
 const FilterByColumn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const [blockFilter, setblockFilter] = useState(false);
+  const [showClass, setshowClass] = useState<string>();
 
   const { data } = UsePlanets();
 
@@ -63,6 +64,8 @@ const FilterByColumn: React.FC = () => {
         nameForm: formData.colum,
       });
 
+      setshowClass(formData.colum);
+
       setblockFilter(true);
       removeColumItens(formData.colum);
     } catch (err: any) {
@@ -80,10 +83,11 @@ const FilterByColumn: React.FC = () => {
       setblockFilter(false);
     }
     formRef.current?.reset();
+    setshowClass('');
   }, [removeForm]);
 
   return (
-    <Form ref={formRef} onSubmit={handleSubmite}>
+    <Forme ref={formRef} onSubmit={handleSubmite} className={showClass}>
       <Container disabled={blockFilter}>
         <Select name="colum" startValue="">
           <option value="" disabled>Selecione</option>
@@ -111,7 +115,7 @@ const FilterByColumn: React.FC = () => {
         <Button type="submit" className="sendForm">Filtrar</Button>
         <Button type="button" className="removeForm" onClick={handleRemoveForm}>Remover</Button>
       </Container>
-    </Form>
+    </Forme>
   );
 };
 

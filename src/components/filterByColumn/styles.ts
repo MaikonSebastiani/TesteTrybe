@@ -1,10 +1,14 @@
 import styled, { css } from 'styled-components';
+import { Form } from '@unform/web';
 import { shade } from 'polished';
 
 interface ContainerProps {
     disabled: boolean
 }
 interface OptionsProps {
+    hidden?: boolean
+}
+interface FormProps {
     hidden?: boolean
 }
 export const Container = styled.div<ContainerProps>`
@@ -52,8 +56,24 @@ export const Close = styled.div`
     }
 `;
 
-export const Option = styled.option<OptionsProps>`
-    /* ${(props) => props.hidden && props.hidden === true && css`
-        visibility: block;
-    `} */
+export const Forme = styled(Form)<FormProps>`
+    & + Form {
+       display: none;
+    }
+
+    &.population + Form {
+        display: block;
+    }
+    &.orbital_period + Form {
+        display: block;
+    }
+    &.diameter + Form {
+        display: block;
+    }
+    &.rotation_period + Form {
+        display: block;
+    }
+    &.surface_water + Form {
+        display: block;
+    }
 `;
